@@ -20,7 +20,9 @@ var pluckFirstLineFromFileAsync = pluckLines.pluckFirstLineFromFileAsync;
 var fetchProfileAndWriteToFile = (readFilePath, writeFilePath) => {
   return pluckFirstLineFromFileAsync(readFilePath)
     .then((username) => {
-      if (!username) throw new Error('user doesnt exist');
+      if (!username) {
+        throw new Error('user doesnt exist');
+      }
       return username;
     })
     .then((username) => {
@@ -29,7 +31,7 @@ var fetchProfileAndWriteToFile = (readFilePath, writeFilePath) => {
     .then((profile) => {
       profile = JSON.stringify(profile);
       fs.writeFileSync(writeFilePath, profile);
-    })
+    });
     //catch the errors?
 };
 
