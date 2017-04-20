@@ -11,10 +11,26 @@
 var fs = require('fs');
 var Promise = require('bluebird');
 
+var getProfiles = require('./promisification.js');
+var getGitHubProfileAsync = getProfiles.getGitHubProfileAsync;
 
+var pluckLines = require('./promiseConstructor.js');
+var pluckFirstLineFromFileAsync = pluckLines.pluckFirstLineFromFileAsync;
 
-var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
-  // TODO
+var fetchProfileAndWriteToFile = (readFilePath, writeFilePath) => {
+  return pluckFirstLineFromFileAsync(readFilePath)
+    .then((username) => {
+      if (!username) throw new Error('user doesnt exist');
+      return username;
+    })
+    .then((username) => {
+      return getGitHubProfileAsync(username);
+    })
+    .then((profile) => {
+      profile = JSON.stringify(profile);
+      fs.writeFileSync(writeFilePath, profile);
+    })
+    //catch the errors?
 };
 
 // Export these functions so we can test them
