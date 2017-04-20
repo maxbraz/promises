@@ -89,11 +89,14 @@ describe('Promisification', function() {
       readFileAndMakeItFunnyAsync(__dirname + '/../files/file_to_read.txt')
         .then(function(funnyFile) {
           funnyFile.split('\n').forEach(function(line) {
+            console.log('** line: ' + line);
             expect(line).to.contain('lol');
           });
           done();
         })
-        .catch(done);
+        .catch(() => {
+          done;
+        });
     });
 
     it('should make any errors available in the `catch` block', function(done) {
