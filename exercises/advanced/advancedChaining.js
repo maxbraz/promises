@@ -16,14 +16,33 @@
 
 var Promise = require('bluebird');
 var lib = require('../../lib/advancedChainingLib.js');
+var promisify = require('../bare_minimum/promisification.js');
+var getProfile = promisify.getGitHubProfileAsync;
 
 // We're using Clarifai's API to recognize different an image into a list of tags
 // Visit the following url to sign up for a free account
 //     https://developer.clarifai.com/accounts/login/?next=/applications/
 // Then, create a new Application and pass your Client Id and Client Secret into the method below
-lib.setImageTaggerCredentials('YOUR_CLIENT_ID', 'YOUR_CLIENT_SECRET')
+lib.setImageTaggerCredentials('xQkkg--DQ_QFMfOBDJErZUVvG3y6SUatm0-ZV_jQ', 'qzCUqqlC9Z1TN0Pynztu3mTPElUppOvCXtuF2XuR');
 
-var searchCommonTagsFromGitHubProfiles = function(githubHandles) {
+var searchCommonTagsFromGitHubProfiles = function (githubHandles) {
+  return Promise.all(githubHandles.map(user => lib.getGitHubProfile(user)))
+    .then(profilesArray => {
+      console.log(profilesArray);
+      profilesArray.map(profile => profile.avatarUrl);
+    })
+    .then(avatarUrls => {
+
+      console.log(avatarUrls);
+
+      console.log(avatarUrls.map(avatarUrl => lib.tagImage(avatarUrl, 'VI0OzRtl8kYHXBa4NBzZVfSq0WCQlj')));
+
+      return avatarUrls.map(avatarUrl => lib.tagImage(avatarUrl, 'VI0OzRtl8kYHXBa4NBzZVfSq0WCQlj'));
+    })
+    .then(tagArrays => {
+      console.log(tagArrays);
+      lib.getIntersection(tagArrays);
+    });
 };
 
 // Export these functions so we can unit test them
