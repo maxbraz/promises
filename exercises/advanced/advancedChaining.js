@@ -18,12 +18,13 @@ var Promise = require('bluebird');
 var lib = require('../../lib/advancedChainingLib.js');
 var promisify = require('../bare_minimum/promisification.js');
 var getProfile = promisify.getGitHubProfileAsync;
+var tokens = require('../../tokens.js');
 
 // We're using Clarifai's API to recognize different an image into a list of tags
 // Visit the following url to sign up for a free account
 //     https://developer.clarifai.com/accounts/login/?next=/applications/
 // Then, create a new Application and pass your Client Id and Client Secret into the method below
-lib.setImageTaggerCredentials('xQkkg--DQ_QFMfOBDJErZUVvG3y6SUatm0-ZV_jQ', 'qzCUqqlC9Z1TN0Pynztu3mTPElUppOvCXtuF2XuR');
+lib.setImageTaggerCredentials(tokens.token.CLIENT_ID, tokens.token.CLIENT_SECRET);
 
 var searchCommonTagsFromGitHubProfiles = function (githubHandles) {
   return Promise.all(githubHandles.map(user => lib.getGitHubProfile(user)))
